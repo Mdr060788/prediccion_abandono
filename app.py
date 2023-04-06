@@ -46,7 +46,7 @@ def main():
     #Reporte PBI
     st.components.v1.html(
     """
-    <iframe title="customers_bank" width="700" height="400" src="https://app.powerbi.com/view?r=eyJrIjoiYjJhNGI3OGYtYTI0MC00ZmU4LWE5N2QtZjQ4ODI3YmQ2ZTFhIiwidCI6ImRmODY3OWNkLWE4MGUtNDVkOC05OWFjLWM4M2VkN2ZmOTVhMCJ9" frameborder="0" allowFullScreen="true"></iframe>
+    <iframe title="customers_bank" width="700" height="400" src="https://app.powerbi.com/view?r=eyJrIjoiYjJhNGI3OGYtYTI0MC00ZmU4LWE5N2QtZjQ4ODI3YmQ2ZTFhIiwidCI6ImRmODY3OWNkLWE4MGUtNDVkOC05OWFjLWM4M2VkN2ZmOTVhMCJ9&pageName=ReportSection7c53cbaed9a20303b3eb" frameborder="0" allowFullScreen="true"></iframe>
     """,
     width=1000, height=400)
 
