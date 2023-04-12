@@ -231,7 +231,7 @@ def main():
                 download_link(df, 'data.csv', 'csv')
 
                 # Agregar botón de descarga de Excel
-                download_link(df, 'data.xlsx', 'xlsx')
+                #download_link(df, 'data.xlsx', 'xlsx')
 
 if __name__ == '__main__':
     main()
