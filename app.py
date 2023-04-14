@@ -14,9 +14,7 @@ def model_prediction(x_in, model):
     return y_pred
 
 def model_prediction_lot(X_lot, model):
-    #X = np.asarray(X_lot)
     X = np.asarray(X_lot).reshape(len(X_lot), -1)
-    #X = np.asarray(X_lot).reshape((1, 11))
     y_preds = model.predict(X)
     return y_preds
    
@@ -60,23 +58,36 @@ def main():
     """
     st.markdown(html_temp,unsafe_allow_html=True)
 
-    #Reporte PBI
-    st.components.v1.html(
-    """
-    <iframe title="customers_churn_bank" width="600" height="373.5" src="https://app.powerbi.com/view?r=eyJrIjoiNDI2M2Q0MGYtMWJmMy00MzAxLWI4OTMtM2Y3OTM0NGM0ZjUyIiwidCI6ImRmODY3OWNkLWE4MGUtNDVkOC05OWFjLWM4M2VkN2ZmOTVhMCJ9" frameborder="0" allowFullScreen="true"></iframe>
-    """,
-    width=1000, height=400)
+    #Reportes
+    report_type = st.selectbox('Seleccione un reporte', ['', 'Power BI', 'Looker Studio'], index=0)
 
-    opt_pred = st.selectbox('Seleccione de que forma será la entrada de datos', options=[
-                                                                            "Un cliente",
-                                                                            "Lote de clientes"
-                                                                            ])
+    if report_type == 'Power BI':
+        st.markdown(
+            """
+            <div style="position: relative; overflow: hidden; padding-top: 75%; height: 0;">
+                <iframe src="https://app.powerbi.com/view?r=eyJrIjoiNDI2M2Q0MGYtMWJmMy00MzAxLWI4OTMtM2Y3OTM0NGM0ZjUyIiwidCI6ImRmODY3OWNkLWE4MGUtNDVkOC05OWFjLWM4M2VkN2ZmOTVhMCJ9" 
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"></iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    if report_type == 'Looker Studio':
+        st.markdown(
+            """
+            <div style="position: relative; overflow: hidden; padding-top: 75%; height: 0;">
+                <iframe src="https://lookerstudio.google.com/embed/reporting/ddbf619f-01d4-4203-8373-c7b62c489124/page/RyiMD" 
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"></iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    st.subheader('Seleccione de que forma será la entrada de datos')
+    opt_pred = st.selectbox("Entrada", ["", "Un cliente", "Lote de clientes"], index=0)
+ 
     if opt_pred == "Un cliente":
-
         # Mostrar campos del predictor    
-
         st.subheader('Modifique los valores para predecir si el cliente abandonará o no la empresa')
-        # Lectura de datos
        
         # Diccionario que mapea los valores del selectbox a valores numéricos
         gender_map = {"Male (Masculino)": 1,
@@ -120,9 +131,9 @@ def main():
         m_i_12_m = st.slider("Months Inactive 12 mon (Meses inactivos en el ultimo año):", min_value=0, max_value=6, value=0, step=1, format="%d")
         c_c_12_m = st.slider("Contacts Count 12 mon (Cantidad de contactos que el cliente ha tenido en los últimos 12 meses.):", min_value=0, max_value=5, value=0, step=1, format="%d")
         t_t_c = st.slider("Total Trans Ct (Cantidad de transacciones realizadas en los últimos 12 meses.):", min_value=0, max_value=200, value=0, step=1, format="%d")
-        t_c_c_q4 = st.slider("Total Ct Chng Q4 Q1 (Cambio porcentual en la cantidad total de transacciones realizadas en el cuarto trimestre con respecto al primer trimestre.):", min_value=0.000, max_value=4.000, step=0.01, value=0.0, format="%.2f %%")
+        t_c_c_q4 = st.slider("Total Ct Chng Q4 Q1 (Cambio porcentual en la cantidad total de transacciones realizadas en el cuarto trimestre con respecto al primer trimestre.):", min_value=0.000, max_value=400.0, step=0.1, value=0.0, format="%.2f %%")
         t_t_a = st.slider("Total Trans Amt (Monto total de transacciones realizadas en los últimos 12 meses.):", min_value=0, max_value=20000, value=0, step=1, format="%d U$S")
-        t_a_c_q4 = st.slider("Total Amt Chng Q4 Q1 (Cambio porcentual en el monto de transacciones realizadas en el cuarto trimestre con respecto al primer trimestre.):", min_value=0.000, max_value=4.000, step=0.01, value=0.0, format="%.2f %%")
+        t_a_c_q4 = st.slider("Total Amt Chng Q4 Q1 (Cambio porcentual en el monto de transacciones realizadas en el cuarto trimestre con respecto al primer trimestre.):", min_value=0.000, max_value=400.0, step=0.1, value=0.0, format="%.2f %%")
 
         # El botón predicción se usa para iniciar el procesamiento
         if st.button("Hacer predicción :"):
@@ -148,17 +159,19 @@ def main():
                     np.int_(t_r_c),
                     np.int_(m_i_12_m),
                     np.int_(c_c_12_m),
-                    np.float_(t_a_c_q4),
+                    np.float_(t_a_c_q4)/100,
                     np.float_(t_t_a),
                     np.float_(t_t_c),
-                    np.float_(t_c_c_q4),
+                    np.float_(t_c_c_q4)/100,
                 ]
-
             #st.write(x_in)
+            
+            #Relizar prediccion
             predictS = model_prediction(x_in, model)
             result = classify(predictS)
             return result
-    else:
+        
+    if opt_pred == "Lote de clientes":
         uploaded_file = st.file_uploader("Cargar archivo CSV", type="csv")
         if uploaded_file is not None:
             # Transformación de datos
@@ -166,7 +179,6 @@ def main():
             st.write(df)
 
             # Convertir las columnas:
-            df = df.drop('Cliente', axis=1)
 
             data = {'gender': df['Género'].replace({'F': 0, 'M': 1}).astype(int),
                     'Income_Category': df['Cat. Ingresos'].replace({
@@ -183,9 +195,9 @@ def main():
                     'Months_Inactive_12_mon': df['Meses inact.'],
                     'Contacts_Count_12_mon': df['Contactos'],
                     'Total_Trans_Ct': df['Ct Trans.'],
-                    'Total_Ct_Chng_Q4_Q1': df['% var ct tr Q4/Q3'].str.replace('%', '').str.replace(',', '.').astype(float),
+                    'Total_Ct_Chng_Q4_Q1': df['% var ct tr Q4/Q3'].str.strip().str.replace('%', '').str.replace(',', '.').astype(float),
                     'Total_Trans_Amt': df['$ Tot. Trans.'].str.replace('$', '').astype(int),
-                    'Total_Amt_Chng_Q4_Q1': df['% var $ tr Q4/Q3'].str.replace('%', '').str.replace(',', '.').astype(float)
+                    'Total_Amt_Chng_Q4_Q1': df['% var $ tr Q4/Q3'].str.strip().str.replace('%', '').str.replace(',', '.').astype(float)
                     }
             
             #dff = pd.DataFrame(data)
@@ -205,7 +217,7 @@ def main():
                             data['Total_Trans_Ct'],
                             data['Total_Ct_Chng_Q4_Q1']]).T
                
-                #st.write(X_lot)
+                st.write(X_lot)
 
                 # Hacer la predicción
                 st.spinner('Realizando predicciones...')
@@ -215,7 +227,7 @@ def main():
 
                 # Mostrar resultados
                 st.success('👇 Resultados de la predicción 👇')
-                df['Predicción'] = labels
+                df.insert(0, 'Predicción', labels)
                 st.write(df)
 
                 # Calcular perdidos
