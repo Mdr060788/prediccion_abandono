@@ -195,9 +195,9 @@ def main():
                     'Months_Inactive_12_mon': df['Meses inact.'],
                     'Contacts_Count_12_mon': df['Contactos'],
                     'Total_Trans_Ct': df['Ct Trans.'],
-                    'Total_Ct_Chng_Q4_Q1': df['% var ct tr Q4/Q3'].str.strip().str.replace('%', '').str.replace(',', '.').astype(float),
-                    'Total_Trans_Amt': df['$ Tot. Trans.'].str.replace('$', '').astype(int),
-                    'Total_Amt_Chng_Q4_Q1': df['% var $ tr Q4/Q3'].str.strip().str.replace('%', '').str.replace(',', '.').astype(float)
+                    'Total_Ct_Chng_Q4_Q1': df['% var ct tr Q4/Q3'].astype(float), #.str.strip().str.replace('%', '').str.replace(',', '.')
+                    'Total_Trans_Amt': df['$ Tot. Trans.'].astype(int), #.str.replace('$', '')
+                    'Total_Amt_Chng_Q4_Q1': df['% var $ tr Q4/Q3'].astype(float) #.str.strip().str.replace('%', '').str.replace(',', '.')
                     }
             
             #dff = pd.DataFrame(data)
@@ -217,7 +217,7 @@ def main():
                             data['Total_Trans_Ct'],
                             data['Total_Ct_Chng_Q4_Q1']]).T
                
-                st.write(X_lot)
+                #st.write(X_lot)
 
                 # Hacer la predicción
                 st.spinner('Realizando predicciones...')
