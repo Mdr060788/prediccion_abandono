@@ -5,7 +5,7 @@ import pickle
 from PIL import Image
 
 # Path del modelo preentrenado
-MODEL_PATH = '/home/mauro/Mis_proyectos_jupyter/Proyects/Codigos/abandono_cliente/pickle_model.pkl'
+MODEL_PATH = '/pickle_model.pkl'
 
 # Se recibe la entrada y el modelo, devuelve la predicción
 def model_prediction(x_in, model):
