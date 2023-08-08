@@ -5,7 +5,7 @@ import pickle
 from PIL import Image
 
 # Path del modelo preentrenado
-MODEL_PATH = '/pickle_model.pkl'
+MODEL_PATH = 'pickle_model.pkl'
 
 # Se recibe la entrada y el modelo, devuelve la predicción
 def model_prediction(x_in, model):
